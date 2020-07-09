@@ -1,12 +1,20 @@
 chairs = new class chairs {
     seats={};
     addagent(agent) {
-        for (other in this.seats) {
-//            console.log(other);
-            seats[other].brain[agent.name]=0;
-            agent.brain[seats[other].name]=0;
+        console.log(agent);
+        for (var other in this.seats) {
+            console.log("hi");
+            this.seats[other].brain[agent.name]=0;
+            agent.brain[this.seats[other].name]=0;
         }
         this.seats[agent.name]=agent;
+    }
+    killagent(name){
+        for (var other in this.seats) {
+            if (other==name) continue;
+            this.seats[other].brain.delete(name);
+        }
+        seats.delete(name)
     }
 }()
 
@@ -16,7 +24,7 @@ class agent {
   stomach=0;
   strat=null;
   record=function(name,action) {
-    brain[name]+=action*2-1;
+    this.brain[name]+=action*2-1;
   }
   name=null;
   constructor(strat) {
@@ -26,9 +34,6 @@ class agent {
     this.name=id++;
   }
 }
-
-chairs.addagent(new agent());
-chairs.addagent(new agent());
 
 var strategy={};
 strategy.ccc=function(mem) {
@@ -47,10 +52,16 @@ function vs(a,b){
   bget=payoff[bgo][ago];
   a.stomach+=aget;
   b.stomach+=bget;
-  a.record(b.id,bgo)
-  b.record(b.id,bgo)
+  a.record(b.name,bgo)
+  b.record(b.name,bgo)
 }
 
-
-
-Kenneyon - You
+//chairs.addagent(new agent());
+chairs.addagent(new agent(strategy.ddd));
+chairs.addagent(new agent(strategy.ccc));
+vs(mean, nice)
+//
+//
+// I was just about to test the vs function with ddd and ccc, and check the brains of the objects to see if they are functioning correctly .
+//
+//
