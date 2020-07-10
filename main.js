@@ -2,9 +2,9 @@
 chairs = new class chairs {
   seats={};
   addagent(agent) {
-    console.log(agent);
+    //console.log(agent);
     for (var other in this.seats) {
-      console.log("hi");
+      //console.log("hi");
       this.seats[other].brain[agent.name]=0;
       agent.brain[this.seats[other].name]=0;
     }
@@ -36,43 +36,101 @@ class agent {
 }
 
 var strategy={};
+//nice
 strategy.ccc={
   think:function(name,action) {
     this.brain[name]+=action*2-1;
   },
-  act:function(mem) {
+  act:function(name) {
     return 1;
   }
 }
+//mean
 strategy.ddd={
   think:function(name,action) {
-    this.brain[name]+=action*2-1;
   },
-  act:function(mem) {
+  act:function(name) {
     return 0;
   }
 }
+//tit 4 tat/copycat
+strategy.t4t={
+  think:function(name,action) {
+    this.brain[name]=1-action;
+  },
+  act:function(name) {
+    return 1-this.brain[name];
+  }
+}
+//cynical tit 4 tat
+strategy.t3t={
+  think:function(name,action) {
+    this.brain[name]=action;
+  },
+  act:function(name) {
+    return this.brain[name];
+  }
+}
+//spiteful/grudger
+strategy.spg={
+  think:function(name,action) {
+    if (action==0)
+      this.brain[name]=-1;
+  },
+  act:function(name) {
+    return 1+this.brain[name];
+  }
+}
+//integral of coop
+strategy.iop={
+  think:function(name,action) {
+    this.brain[name]+=action*2-1;
+  },
+  act:function(name) {
+    return (this.brain[name]>=0)?1:0
+  }
+}
+//integral of bad
+strategy.ips={
+  think:function(name,action) {
+    this.brain[name]+=action*2-1;
+  },
+  act:function(name) {
+    return (this.brain[name]>0)?1:0
+  }
+}
+strategy.ppt={
+  think:function(name,action) {
+    //I care for not what happens to me in this carnal world.
+  },
+  act:function(name) {
+    return Number(prompt("Huh??!"));
+  }
+}
 
-payoff=[[-1,1],[-1,1]]//]
+
+payoff=[[-1,1],[-1,1]]
 
 function vs(a,b){
-  ago=a.strat(a.brain[b.name]);
-  bgo=b.strat(b.brain[a.name]);
+  ago=a.strat(b.name);
+  bgo=b.strat(a.name);
+  console.log(ago);
+  console.log(bgo);
   aget=payoff[ago][bgo];
   bget=payoff[bgo][ago];
   a.stomach+=aget;
   b.stomach+=bget;
-  a.record(b.name,bgo)
-  b.record(a.name,ago)
+  a.record(b.name,bgo);
+  b.record(a.name,ago);
 }
 
 //chairs.addagent(new agent());
-chairs.addagent(new agent(strategy.ccc));
-chairs.addagent(new agent(strategy.ccc));
-//vs(mean, nice)
-vs(chairs.seats[0],chairs.seats[1])
-//
+//chairs.addagent(new agent(strategy.t4t));
+//chairs.addagent(new agent(strategy.t3t));
+iop=new agent(strategy.iop);
+ppt=new agent(strategy.ppt);
+vs(iop,ppt);
 //
 // I was just about to test the vs function with ddd and ccc, and check the brains of the objects to see if they are functioning correctly .
 //
-//always defect tit 4 tat tit 4 tat suspicious spiteful tit 4 tat integral tit 4 tat integral but defects ddc ccd cd ccc ddd
+// ddc ccd cd ccc ddd
