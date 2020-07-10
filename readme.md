@@ -17,3 +17,5 @@ ccd
 cd
 ccc
 ddd
+
+http://jasss.soc.surrey.ac.uk/20/4/12.html
