@@ -163,3 +163,5 @@ vs(chairs.seats[0],chairs.seats[1]);
 // I was just about to test the vs function with ddd and ccc, and check the brains of the objects to see if they are functioning correctly .
 //
 // ddc ccd cd ccc ddd
+
+![](https://i.imgur.com/gOGi2hY.png)
