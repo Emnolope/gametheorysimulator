@@ -8,6 +8,7 @@ chairs = new class chairs {
       this.seats[other].brain[agent.name]=0;
       agent.brain[this.seats[other].name]=0;
     }
+    agent.brain[agent.name]=0;
     this.seats[agent.name]=agent;
   }
   killagent(name){
@@ -99,6 +100,37 @@ strategy.ips={
     return (this.brain[name]>0)?1:0
   }
 }
+strategy.ccd={
+  think:function(name,action) {
+    this.brain[this.name]+=1;
+  },
+  act:function(name) {
+    return parseInt(1-(this.brain[this.name]%3)/2);
+  }
+}
+strategy.cdd={
+  think:function(name,action) {
+    this.brain[this.name]+=1;
+  },
+  act:function(name) {
+    return Math.max(2-this.brain[this.name],1);
+  }
+}
+strategy.cnd={
+  think:function(name,action) {
+    this.brain[this.name]+=1;
+  },
+  act:function(name) {
+    return Math.max(1-this.brain[this.name]%3,0);
+  }
+}
+strategy.ran={
+  think:function(name,action) {
+  },
+  act:function(name){
+     return parseInt(Math.random()+0.5);
+  }
+}
 strategy.ppt={
   think:function(name,action) {
     //I care for not what happens to me in this carnal world.
@@ -107,7 +139,6 @@ strategy.ppt={
     return Number(prompt("Huh??!"));
   }
 }
-
 
 payoff=[[-1,1],[-1,1]]
 
@@ -125,11 +156,9 @@ function vs(a,b){
 }
 
 //chairs.addagent(new agent());
-//chairs.addagent(new agent(strategy.t4t));
-//chairs.addagent(new agent(strategy.t3t));
-iop=new agent(strategy.iop);
-ppt=new agent(strategy.ppt);
-vs(iop,ppt);
+chairs.addagent(new agent(strategy.ips));
+chairs.addagent(new agent(strategy.ppt));
+vs(chairs.seats[0],chairs.seats[1]);
 //
 // I was just about to test the vs function with ddd and ccc, and check the brains of the objects to see if they are functioning correctly .
 //
