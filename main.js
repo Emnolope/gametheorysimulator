@@ -1,6 +1,16 @@
 //WORLD
 chairs = new class chairs {
   seats={};
+  life=null;
+  death=null;
+  payoff=null;
+  lifetime=null
+  constructor () {
+    this.payoff=[[-1,1],[-1,1]];
+    this.life=10000000000000000;
+    this.death=-10000000000000000;
+    this.lifetime=10;
+  }
   addagent(agent) {
     //console.log(agent);
     for (var other in this.seats) {
@@ -17,6 +27,47 @@ chairs = new class chairs {
       this.seats[other].brain.delete(name);
     }
     seats.delete(name)
+  }
+  vs(a,b){
+    ago=a.strat(b.name);
+    bgo=b.strat(a.name);
+    aget=this.payoff[ago][bgo];
+    bget=this.payoff[bgo][ago];
+    a.stomach+=aget;
+    b.stomach+=bget;
+    console.log(a.stomach);
+    console.log(b.stomach);
+    a.record(b.name,bgo);
+    b.record(a.name,ago);
+  }
+  lifedeath(agent) {
+    if (agent.stomach<this.death*this.lifetime)
+      return -1;
+    if (agent.stomach>this.life*this.lifetime)
+      return 1;
+    return 0;
+  }
+  circle() {
+    for (var part in this.seats) {
+      var witness=lifedeath(agent);
+      if (witness==0)
+        continue;
+      if (witness==-1) {
+        this.killagent(part);
+      }
+      if (witness==1) {
+        this.addagent(this.seats[part].strat);
+      }
+    }
+  }
+  pvp() {
+    for (var part in this.seats) {
+    }
+  }
+  everybody() {
+    for (var part in this.seats) {
+      console.log(this.seats[part]);
+    }
   }
 }()
 
@@ -140,26 +191,29 @@ strategy.ppt={
   }
 }
 
-payoff=[[-1,1],[-1,1]]
-
 function vs(a,b){
   ago=a.strat(b.name);
   bgo=b.strat(a.name);
-  console.log(ago);
-  console.log(bgo);
-  aget=payoff[ago][bgo];
-  bget=payoff[bgo][ago];
+  aget=chairs.payoff[ago][bgo];
+  bget=chairs.payoff[bgo][ago];
   a.stomach+=aget;
   b.stomach+=bget;
+  //console.log(a.stomach);
+  //console.log(b.stomach);
   a.record(b.name,bgo);
   b.record(a.name,ago);
 }
 
 //chairs.addagent(new agent());
 chairs.addagent(new agent(strategy.ips));
-chairs.addagent(new agent(strategy.ppt));
-vs(chairs.seats[0],chairs.seats[1]);
+chairs.addagent(new agent(strategy.iop));
+chairs.addagent(new agent(strategy.iop));
+chairs.everybody();
+//ARTIFICIAL ANGEL OF DEATH I DO NOT WANT TO CREATE
 //
 // I was just about to test the vs function with ddd and ccc, and check the brains of the objects to see if they are functioning correctly .
 //
 // ddc ccd cd ccc ddd
+//MAKE NIGGER DETECTOR! PLACE IN THE US
+//
+//make hate detector....
