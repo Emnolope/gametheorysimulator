@@ -1,6 +1,6 @@
 //WORLD
 chairs = new class chairs {
-  seats={};
+  seats={};//Change this to Map datatype so I can iterate over the objects cleanly in function pvp.
   life=null;
   death=null;
   payoff=null;
