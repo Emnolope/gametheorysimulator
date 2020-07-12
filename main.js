@@ -1,6 +1,6 @@
 //WORLD
 chairs = new class chairs {
-  seats={};//Change this to Map datatype so I can iterate over the objects cleanly in function pvp.
+  seats=new Map();
   life=null;
   death=null;
   payoff=null;
@@ -13,18 +13,19 @@ chairs = new class chairs {
   }
   addagent(agent) {
     //console.log(agent);
-    for (var other in this.seats) {
+    for (var [seat,other] of this.seats) {
       //console.log("hi");
-      this.seats[other].brain[agent.name]=0;
-      agent.brain[this.seats[other].name]=0;
+      other.brain[agent.name]=0;
+      agent.brain[other.name]=0;
     }
     agent.brain[agent.name]=0;
     this.seats[agent.name]=agent;
   }
   killagent(name){
-    for (var other in this.seats) {
-      if (other==name) continue;
-      this.seats[other].brain.delete(name);
+    for (var [seat,other] of this.seats) {
+      if (seat==name)
+        continue;
+      other.brain.delete(name);
     }
     seats.delete(name)
   }
@@ -61,12 +62,13 @@ chairs = new class chairs {
     }
   }
   pvp() {
-    for (var part in this.seats) {
-    }
+    ordered=Array.from(seats);
+    size=ordered.length;
+    for (var i=0; i<size; i++)
+      for (var j=0; j<i; j++)
+        this.vs(ordered[i][1],ordered[j][1]);
   }
   everybody() {
-    for (var part in this.seats) {
-      console.log(this.seats[part]);
     }
   }
 }()
