@@ -19,7 +19,7 @@ chairs = new class chairs {
       agent.brain[other.name]=0;
     }
     agent.brain[agent.name]=0;
-    this.seats[agent.name]=agent;
+    this.seats.set(agent.name,agent);
   }
   killagent(name) {
     for (var [seat,other] of this.seats) {
@@ -32,9 +32,9 @@ chairs = new class chairs {
   vs(a,b) {
     //
     if (typeof a == "number")
-      a=this.seats[a];
+      a=this.seats.get(a);
     if (typeof b == "number")
-      b=this.seats[b]
+      b=this.seats.get(b)
     //
     var ago=a.strat(b.name);
     var bgo=b.strat(a.name);
@@ -55,20 +55,21 @@ chairs = new class chairs {
     return 0;
   }
   circle() {
-    for (var part in this.seats) {
+    for (var [name, agent] of this.seats) {
       var witness=lifedeath(agent);
       if (witness==0)
         continue;
       if (witness==-1) {
-        this.killagent(part);
+        this.killagent(name);
       }
       if (witness==1) {
-        this.addagent(this.seats[part].strat);
+        this.addagent(this.seats.get(name).strat);
       }
     }
   }
   pvp() {
     var ordered=Array.from(this.seats);
+    /*console.log(ordered);*/
     var size=ordered.length;
     for (var i=0; i<size; i++)
       for (var j=0; j<i; j++)
@@ -76,7 +77,7 @@ chairs = new class chairs {
   }
   round() {
     for (var i=0; i<this.lifetime; i++)
-        pvp();
+        this.pvp();
   }
   everybody() {
   }
@@ -219,7 +220,7 @@ strategy.ppt={
 chairs.addagent(new agent(strategy.ccc));
 chairs.addagent(new agent(strategy.ccc));
 chairs.addagent(new agent(strategy.ccc));
-chairs.everybody();
+seats=chairs.seats
 //ARTIFICIAL ANGEL OF DEATH I DO NOT WANT TO CREATE
 //
 // I was just about to test the vs function with ddd and ccc, and check the brains of the objects to see if they are functioning correctly .
@@ -228,4 +229,7 @@ chairs.everybody();
 //MAKE NIGGER DETECTOR! PLACE IN THE US
 //
 //make hate detector....
-chairs.round()
+//chairs.vs(seats[0],seats[1]);
+//chairs.vs(seats[0],seats[1]);
+//chairs.vs(seats[0],seats[1]);
+chairs.pvp();
