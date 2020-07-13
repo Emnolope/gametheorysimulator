@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    border: 0;
+    overflow: hidden; /*  Disable scrollbars */
+    display: block;  /* No floating content on sides */
+  }
+  /* body { 
+    margin: 0 auto;
+    width: 300px;
+    -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    filter: FlipH;
+    -ms-filter: "FlipH";
+  } */
+</style>
+</head>
+<body>
+
+<canvas id="myCanvas" style="border:1px solid #d3d3d3;">
+Your browser does not support the HTML5 canvas tag.</canvas>
+<script >
+if (!!"init") {
+  var c = document.getElementById("myCanvas");
+  var ctx = c.getContext("2d");
+  ctx.translate(0.5, 0.5);
+}
+
+function draw() {
+  ctx.canvas.width  = window.innerWidth;
+  ctx.canvas.height = window.innerHeight;
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(0, 150);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(1, 1);
+  ctx.lineTo(1, 201);
+  ctx.stroke();
+}
+draw();
+
+function scroll() {
+  var imgData = ctx.getImageData(0, 0, 500, 500);
+  ctx.putImageData(imgData, 1, 0);
+}
+scroll();
+</script>
+</body>
+</html>
