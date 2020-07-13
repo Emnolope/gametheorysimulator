@@ -4,7 +4,7 @@ chairs = new class chairs {
   life=null;
   death=null;
   payoff=null;
-  lifetime=null
+  lifetime=null;
   constructor () {
     this.payoff=[[-1,1],[-1,1]];
     this.life=10000000000000000;
@@ -21,19 +21,25 @@ chairs = new class chairs {
     agent.brain[agent.name]=0;
     this.seats[agent.name]=agent;
   }
-  killagent(name){
+  killagent(name) {
     for (var [seat,other] of this.seats) {
       if (seat==name)
         continue;
       other.brain.delete(name);
     }
-    seats.delete(name)
+    seats.delete(name);
   }
-  vs(a,b){
-    ago=a.strat(b.name);
-    bgo=b.strat(a.name);
-    aget=this.payoff[ago][bgo];
-    bget=this.payoff[bgo][ago];
+  vs(a,b) {
+    //
+    if (typeof a == "number")
+      a=this.seats[a];
+    if (typeof b == "number")
+      b=this.seats[b]
+    //
+    var ago=a.strat(b.name);
+    var bgo=b.strat(a.name);
+    var aget=this.payoff[ago][bgo];
+    var bget=this.payoff[bgo][ago];
     a.stomach+=aget;
     b.stomach+=bget;
     console.log(a.stomach);
@@ -62,14 +68,17 @@ chairs = new class chairs {
     }
   }
   pvp() {
-    ordered=Array.from(seats);
-    size=ordered.length;
+    var ordered=Array.from(this.seats);
+    var size=ordered.length;
     for (var i=0; i<size; i++)
       for (var j=0; j<i; j++)
         this.vs(ordered[i][1],ordered[j][1]);
   }
+  round() {
+    for (var i=0; i<this.lifetime; i++)
+        pvp();
+  }
   everybody() {
-    }
   }
 }()
 
@@ -193,7 +202,7 @@ strategy.ppt={
   }
 }
 
-function vs(a,b){
+/*function vs(a,b){
   ago=a.strat(b.name);
   bgo=b.strat(a.name);
   aget=chairs.payoff[ago][bgo];
@@ -204,12 +213,12 @@ function vs(a,b){
   //console.log(b.stomach);
   a.record(b.name,bgo);
   b.record(a.name,ago);
-}
+}*/
 
 //chairs.addagent(new agent());
-chairs.addagent(new agent(strategy.ips));
-chairs.addagent(new agent(strategy.iop));
-chairs.addagent(new agent(strategy.iop));
+chairs.addagent(new agent(strategy.ccc));
+chairs.addagent(new agent(strategy.ccc));
+chairs.addagent(new agent(strategy.ccc));
 chairs.everybody();
 //ARTIFICIAL ANGEL OF DEATH I DO NOT WANT TO CREATE
 //
@@ -219,3 +228,4 @@ chairs.everybody();
 //MAKE NIGGER DETECTOR! PLACE IN THE US
 //
 //make hate detector....
+chairs.round()
