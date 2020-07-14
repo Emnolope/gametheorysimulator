@@ -1,20 +1,19 @@
 //WORLD
 chairs = new class chairs {
   seats=new Map();
-  life=null;
+  birth=null;
   death=null;
   payoff=null;
   lifetime=null;
   constructor () {
     this.payoff=[[-1,1],[-1,1]];
-    this.life=10000000000000000;
-    this.death=-10000000000000000;
+    this.birth=1;
+    this.death=-1;
     this.lifetime=10;
   }
   addagent(agent) {
-    //console.log(agent);
+    console.log(agent);
     for (var [seat,other] of this.seats) {
-      //console.log("hi");
       other.brain[agent.name]=0;
       agent.brain[other.name]=0;
     }
@@ -30,40 +29,45 @@ chairs = new class chairs {
     seats.delete(name);
   }
   vs(a,b) {
-    //
     if (typeof a == "number")
       a=this.seats.get(a);
     if (typeof b == "number")
       b=this.seats.get(b)
-    //
     var ago=a.strat(b.name);
     var bgo=b.strat(a.name);
     var aget=this.payoff[ago][bgo];
     var bget=this.payoff[bgo][ago];
     a.stomach+=aget;
     b.stomach+=bget;
+    //console.log("wtf bruh")
     console.log(a.stomach);
     console.log(b.stomach);
     a.record(b.name,bgo);
     b.record(a.name,ago);
   }
-  lifedeath(agent) {
-    if (agent.stomach<this.death*this.lifetime)
+  birthdeath(agent) {
+    if (agent.stomach<this.underlimit)
       return -1;
-    if (agent.stomach>this.life*this.lifetime)
+    if (agent.stomach>this.overlimit)
       return 1;
     return 0;
   }
   circle() {
-    for (var [name, agent] of this.seats) {
-      var witness=lifedeath(agent);
+    this.underlimit=this.death/this.lifetime/this.seats.size;
+    this.overlimit=this.birth/this.lifetime/this.seats.size;
+    var bench=new Map(this.seats);
+    for (var [name, agent] of bench) {
+      console.log("Ow.");
+      var witness=this.birthdeath(agent);
+      console.log("Hey!");
       if (witness==0)
         continue;
       if (witness==-1) {
         this.killagent(name);
       }
       if (witness==1) {
-        this.addagent(this.seats.get(name).strat);
+        console.log(this.seats.get(name).strat);
+        this.addagent(new agent(this.seats.get(name).strat));
       }
     }
   }
@@ -77,7 +81,7 @@ chairs = new class chairs {
   }
   round() {
     for (var i=0; i<this.lifetime; i++)
-        this.pvp();
+      this.pvp();
   }
   everybody() {
   }
@@ -92,6 +96,7 @@ class agent {
   name=null;
   constructor(strat) {
     if (strat!==undefined) {
+      this.strat=strat;
       this.record=strat.think;
       this.strat=strat.act;
     }
@@ -203,19 +208,6 @@ strategy.ppt={
   }
 }
 
-/*function vs(a,b){
-  ago=a.strat(b.name);
-  bgo=b.strat(a.name);
-  aget=chairs.payoff[ago][bgo];
-  bget=chairs.payoff[bgo][ago];
-  a.stomach+=aget;
-  b.stomach+=bget;
-  //console.log(a.stomach);
-  //console.log(b.stomach);
-  a.record(b.name,bgo);
-  b.record(a.name,ago);
-}*/
-
 //chairs.addagent(new agent());
 chairs.addagent(new agent(strategy.ccc));
 chairs.addagent(new agent(strategy.ccc));
@@ -232,4 +224,4 @@ seats=chairs.seats
 //chairs.vs(seats[0],seats[1]);
 //chairs.vs(seats[0],seats[1]);
 //chairs.vs(seats[0],seats[1]);
-chairs.pvp();
+chairs.round();
